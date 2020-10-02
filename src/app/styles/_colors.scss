@@ -1,0 +1,32 @@
+$colorBlack: #000;
+$colorWhite: #FFF;
+
+$colorSemiTransparent: rgba(255, 255, 255, 0.5);
+
+$colorTextBase: #212121; // Grey900
+$colorTextLight: #616161; // Grey700
+$colorTextSuperLight: #9E9E9E; // Grey500
+
+$colorBlueGrey100: #CFD8DC;
+
+$colorBlueGrey400: #78909C;
+$colorBlueGrey500: #607D8B;
+$colorBlueGrey600: #546E7A;
+
+$colorBlueBackground: #014db8;
+
+$colorNewGreen:  #66bb6a;
+$colorBubbleDefaultGreen:  #7fd083;
+
+$colorNewRed: #f44336;
+$colorBubbleDefaultRed: #ff5d51;
+
+$colorNewBlue: #4a90e2;
+
+.background-easy-green {
+  background-color: #7fd083;
+}
+
+.background-easy-red {
+  background-color: $colorBubbleDefaultRed;
+}

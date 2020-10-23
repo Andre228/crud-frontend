@@ -1,0 +1,16 @@
+@import "colors";
+
+
+app-grid {
+  .grid-row {
+    cursor: pointer;
+    transition: .3s;
+  }
+
+  .grid-row:hover {
+    background-color: $colorUltraLight;
+  }
+
+}
+
+

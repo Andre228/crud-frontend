@@ -3,14 +3,16 @@ import { NgModule } from '@angular/core';
 
 import {HttpClientModule} from "@angular/common/http";
 import {AppHomeComponent} from "./components/home.component";
+import {CategoriesModule} from "../categories/categories.module";
 
 @NgModule({
   declarations: [
-    AppHomeComponent
+    AppHomeComponent,
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    CategoriesModule
   ],
   providers: [],
   bootstrap: []

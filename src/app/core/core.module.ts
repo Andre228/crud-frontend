@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import {Rest} from "./rest/rest.service";
+import { Rest } from './rest/rest.service';
 
 @NgModule({
   providers: [

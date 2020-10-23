@@ -1,10 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {FormControl, FormGroup} from "@angular/forms";
-import {ReplaySubject} from "rxjs";
-import {APP_HOST} from "../../../core/config";
-import {takeUntil} from "rxjs/internal/operators";
-import {AuthService} from "../services/auth.service";
+import { FormControl, FormGroup } from '@angular/forms';
+import { ReplaySubject } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +16,7 @@ import {AuthService} from "../services/auth.service";
       </div>
       <div class="form-group">
         <label for="exampleInputName">Придумайте логин</label>
-        <input formControlName="name" type="text" class="form-control" id="exampleInputName">
+        <input formControlName="username" type="text" class="form-control" id="exampleInputName">
       </div>
       <div class="form-group">
         <label for="exampleInputPassword1">Пароль</label>
@@ -57,7 +55,7 @@ export class AppRegisterComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.formData = new FormGroup({
       email    : new FormControl(),
-      name     : new FormControl(),
+      username : new FormControl(),
       password : new FormControl()
     });
   }

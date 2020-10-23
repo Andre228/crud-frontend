@@ -1,29 +1,56 @@
 import {Injectable} from "@angular/core";
-import {Observable, of, Observer, from} from 'rxjs';
-import {HttpClient} from "@angular/common/http";
-
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {APP_HOST} from "../config";
 
 
 @Injectable()
 export class Rest {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
-  get(url: string, body: {}): Promise<Object> {
-    if (url && body) {
-      return this.http.get(url, body).toPromise();
+  get(url: string, options?: boolean): Promise<any> {
+    url = `${APP_HOST}` + url;
+    if (url) {
+      if (options) {
+        return this.http.get(url, { headers: this.getAuthorizationHeaders() }).toPromise();
+      } else {
+        return this.http.get(url).toPromise();
+      }
     } else {
       return Promise.resolve({});
     }
   }
 
-
-  post(url: string, body: {}): Promise<Object> {
+  post(url: string, body: {}, options?: boolean): Promise<any> {
+    url = `${APP_HOST}` + url;
     if (url && body) {
-      return this.http.post(url, body).toPromise();
+      if (options) {
+        return this.http.post(url, body, { headers: this.getAuthorizationHeaders() }).toPromise();
+      } else {
+        return this.http.post(url, body).toPromise();
+      }
     } else {
       return Promise.resolve({});
+    }
+  }
+
+  private getAuthorizationHeaders(): HttpHeaders {
+    if (this.getAuthMetaData()) {
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json', 'Authorization': this.getAuthMetaData()
+      });
+      return headers;
+    } else {
+      return new HttpHeaders();
+    }
+  }
+
+  private getAuthMetaData(): string {
+    const logAndPass = localStorage.getItem('user');
+    if (logAndPass) {
+      return logAndPass;
+    } else {
+      return '';
     }
   }
 

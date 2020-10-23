@@ -1,10 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import {FormControl, FormGroup, NgForm} from "@angular/forms";
-import {ReplaySubject} from "rxjs";
-import {APP_HOST} from "../../../core/config";
-import {takeUntil} from "rxjs/internal/operators";
-import {AuthService} from "../services/auth.service";
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
+import {Router} from "@angular/router";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -13,12 +11,12 @@ import {AuthService} from "../services/auth.service";
     <form [formGroup]="formData" (submit)="login($event)">
       <div class="form-group">
         <label for="exampleInputName">Email адрес</label>
-        <input formControlName="name" type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp">
-        <small id="nameHelp" class="form-text text-muted">Мы никогда никому не передадим вашу электронную почту</small>
+        <input formControlName="username" type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp" name="username">
+        <small id="nameHelp" class="form-text text-muted" name="name">Мы никогда никому не передадим вашу электронную почту</small>
       </div>
       <div class="form-group">
         <label for="exampleInputPassword1">Пароль</label>
-        <input formControlName="password" type="password" class="form-control" id="exampleInputPassword1">
+        <input formControlName="password" type="password" class="form-control" id="exampleInputPassword1" name="password">
       </div>
       <div class="justify-flex-reverse">
         <button type="submit" class="btn btn-primary" [disabled]="isLoading">Войти</button>
@@ -31,7 +29,7 @@ import {AuthService} from "../services/auth.service";
   </div>
   `
 })
-export class AppLoginComponent implements OnInit, OnDestroy {
+export class AppLoginComponent implements OnInit {
 
   private formData: FormGroup;
 
@@ -40,26 +38,23 @@ export class AppLoginComponent implements OnInit, OnDestroy {
 
   private isLoading: boolean = false;
 
-  private readonly destroyed$ = new ReplaySubject<void>(1);
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+              private http: HttpClient,
+              private router: Router) {}
 
-  ngOnDestroy() {
-    this.destroyed$.next(null);
-    this.destroyed$.complete();
-  }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.formData = new FormGroup({
-      name     : new FormControl(),
+      username : new FormControl(),
       password : new FormControl()
     });
   }
 
   private login(event): void {
-    if (this.formData.value && this.formData.value.name && this.formData.value.password) {
+    if (this.formData.value && this.formData.value.username && this.formData.value.password) {
       this.getUser();
-    } else if (!this.formData.value.name) {
+    } else if (!this.formData.value.username) {
       this.class = 'alert-danger';
       this.text = 'Введите логин';
     } else if (!this.formData.value.password) {
@@ -74,13 +69,14 @@ export class AppLoginComponent implements OnInit, OnDestroy {
     const loggedUser = await this.authService.login(this.formData.value)
       .catch((err) => {
         this.class = 'alert-danger';
-        this.text = err.error.message;
+        this.text = err.error;
         this.isLoading = false;
       });
       if (loggedUser) {
         this.class = 'alert-success';
         this.text = 'Вы вошли';
         this.isLoading = false;
+        this.authService.setLoginStatus(true);
       }
   }
 }

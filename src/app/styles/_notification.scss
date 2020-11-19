@@ -1,0 +1,14 @@
+app-notification {
+
+  .notification-wrapper {
+    transition: .3s;
+    position: absolute;
+    bottom: 80px;
+    right: 20px;
+    padding: 5px 10px 5px 10px;
+    background-color: #7fd083;
+    width: auto;
+    height: auto;
+  }
+
+}

@@ -5,38 +5,55 @@ import {Router} from "@angular/router";
 @Component({
   selector: 'app-grid',
   template: `
-    <div class="container">
-      <div *ngIf="isLoading" class="spinner-border text-primary" role="status">
-        <span class="sr-only"></span>
-      </div>
-      <div *ngIf="!isLoading">
-        <nav>
-          <div class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add</button>
-          </div>
-        </nav>
-        <table class="table">
-          <thead class="thead-light">
+    <!--<div class="grid-wrapper">-->
+      <!--<div class="grid-row" *ngFor="let row of gridRows">-->
+        <!--<div *ngFor="let cell of row | keyvalue; index as i">{{ isShow(cell) }}</div>-->
+        <!--&lt;!&ndash;<div class="grid-column"></div>&ndash;&gt;-->
+      <!--</div>-->
+    <!--</div>-->
+      <!--<div>-->
+        <!--<table class="table">-->
+          <!--<thead class="thead-light">-->
+            <!--<tr class="table-header">-->
+              <!--<th *ngFor="let header of tableHeaders | keyvalue">-->
+                <!--{{ isShowHeaderColumn(header) ? header.value : '' }}-->
+              <!--</th>-->
+            <!--</tr>-->
+          <!--</thead>-->
+          <!--<tbody>-->
+            <!--<tr class="grid-row" *ngFor="let row of gridRows; let j = index" (click)="onClick(j)">-->
+              <!--<td class="grid-cell" *ngFor="let cell of row | keyvalue; index as i">{{ isShow(cell) }}-->
+                <!--<span class="trash" *ngIf="i === 0" (click)="delete($event, j)"></span>-->
+              <!--</td>-->
+            <!--</tr>-->
+          <!--</tbody>-->
+        <!--</table>-->
+      <!--</div>-->
+        <table class="content-table">
+          <thead>
             <tr>
-              <th *ngFor="let header of gridRows[0] | keyvalue">{{header.key}}</th>
+              <th *ngFor="let header of tableHeaders | keyvalue">
+                {{ isShowHeaderColumn(header) ? header.value : '' }}
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr class="grid-row" *ngFor="let row of gridRows" (click)="onClick(row)">
-            <!--<th scope="row">{{j+1}}</th>-->
-              <td *ngFor="let cell of row | keyvalue">{{cell.value}}</td>
+            <tr class="table-row" *ngFor="let row of gridRows; let j = index" (click)="onClick(j)">
+              <td class="table-cell" *ngFor="let cell of row | keyvalue; index as i">{{ isShow(cell) }}
+                <span class="trash" *ngIf="i === 0" (click)="delete($event, j)"></span>
+              </td>
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
     `
 })
 export class AppGridComponent implements OnInit, OnChanges {
 
   @Input() private gridRows: any [] = [];
+  @Input() private tableHeaders = {};
 
   @Output() private clickEvent = new EventEmitter<any>();
+  @Output() private deleteEvent = new EventEmitter<any>();
 
   private isLoading: boolean = true;
 
@@ -47,14 +64,28 @@ export class AppGridComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if ( this.gridRows.length > 0) {
-      this.isLoading = false;
+    if (this.gridRows.length > 0) {
+     // this.isLoading = false;
     }
   }
 
-  private onClick(rowData): void {
-    this.clickEvent.emit(rowData);
+  private onClick(index: number): void {
+    this.clickEvent.emit(index);
   }
 
+  private delete(event, index: number): void {
+    event.stopPropagation();
+    this.deleteEvent.emit(index);
+  }
+
+  private isShowHeaderColumn(header): boolean {
+    return header.key !== 'id' && header.key !== 'updatedAt' && header.key !== 'deletedAt';
+  }
+
+  private isShow(cell) {
+    if (cell.key !== 'id' && cell.key !== 'control' && cell.key !== 'updatedAt' && cell.key !== 'deletedAt') {
+      return cell.value;
+    }
+  }
 
 }

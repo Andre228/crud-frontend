@@ -34,6 +34,33 @@ export class Rest {
     }
   }
 
+
+  put(url: string, body: {}, options?: boolean): Promise<any> {
+    url = `${APP_HOST}` + url;
+    if (url && body) {
+      if (options) {
+        return this.http.put(url, body, { headers: this.getAuthorizationHeaders() }).toPromise();
+      } else {
+        return this.http.put(url, body).toPromise();
+      }
+    } else {
+      return Promise.resolve({});
+    }
+  }
+
+  delete(url: string, options?: boolean): Promise<any> {
+    url = `${APP_HOST}` + url;
+    if (url) {
+      if (options) {
+        return this.http.delete(url, { headers: this.getAuthorizationHeaders() }).toPromise();
+      } else {
+        return this.http.delete(url).toPromise();
+      }
+    } else {
+      return Promise.resolve({});
+    }
+  }
+
   private getAuthorizationHeaders(): HttpHeaders {
     if (this.getAuthMetaData()) {
       const headers = new HttpHeaders({

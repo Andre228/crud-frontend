@@ -10,9 +10,9 @@ import {DialogRef} from "../services/dialog-ref";
   selector: 'app-dialog',
   template: `
   <div class="overlay" (click)="onOverlayClicked($event)">
-  <div class="dialog" (click)="onDialogClicked($event)">
-    <ng-template appInsertion> </ng-template>
-  </div>
+    <div class="dialog" (click)="onDialogClicked($event)">
+      <ng-template appInsertion> </ng-template>
+    </div>
   </div>
   `
 })

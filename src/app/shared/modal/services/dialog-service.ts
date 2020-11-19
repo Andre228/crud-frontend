@@ -55,7 +55,7 @@ export class DialogService {
     this.dialogComponentRef.destroy();
   }
 
-  public open(componentType: Type<any>, config: DialogConfig) {
+  public open(componentType: Type<any>, config?: DialogConfig) {
     const dialogRef = this.appendDialogComponentToBody(config);
 
     this.dialogComponentRef.instance.childComponentType = componentType;

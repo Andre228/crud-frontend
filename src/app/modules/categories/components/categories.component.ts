@@ -82,34 +82,49 @@ export class AppCategoriesComponent implements OnInit, OnDestroy, OnChanges {
         data: { categoryInfo: updatingCategory, listCategories: this.categories },
       });
       ref.afterClosed.pipe(takeUntil(this.destroyed$)).subscribe(result => {
-        console.log('Dialog closed', result);
+        if (result) {
+          this.categories[event] = new Category(result);
+          this.setRenderCategories();
+        }
       });
     }
   }
 
   private async deleteCategory(event) {
     this.loader.runLoader(this.viewContainerRef);
-    console.log(this.categories[event]);
     const id = this.categories[event].getId();
     const url = `/categories/delete/${id}`;
-    const checkDeleting = await this.rest.delete(url, true);
-    if (checkDeleting) {
-      this.removeCategory(id);
-      this.setRenderCategories();
-      this.notification.showNotification({ message: 'Successfully deleted' });
-      this.notification.closeNotification();
-    }
+    let notify = { message: '', class: '' };
+    await this.rest.delete(url, true).then(response => {
+      if (response) {
+        this.removeCategory(id);
+        this.setRenderCategories();
+        notify = {
+          message: 'Successfully deleted',
+          class: 'success-notify'
+        };
+      }
+    })
+      .catch(err => {
+        notify = {
+          message: err.error,
+          class: 'danger-notify'
+        };
+      });
     this.loader.removeLoader();
+    this.notification.showNotification(notify);
+    this.notification.closeNotification();
+
   }
 
   private setRenderCategories(): void {
-    this.categoriesRender = this.categories.map((category) => {
+    this.categoriesRender = this.categories.map((category, index, array) => {
       return {
         control: ['Delete'],
         title: category['title'],
         slug: category['slug'],
         description: category['description'],
-        parentId: category['parentId'],
+        parentId: array.find(item => item.getId() === category.getParentId()).getTitle(),
         createdAt: category['createdAt']
       };
     });

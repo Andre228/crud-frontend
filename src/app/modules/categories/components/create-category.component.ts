@@ -63,26 +63,6 @@ export class AppCreateCategoryComponent implements OnInit {
     if (!this.category.getParentId()) {
       this.category.setParentId(0);
     }
-
-   //  const cdd = new Date();
-   //  const cdt = new Date().toLocaleTimeString();
-   //
-   //  let ddd = new Date();
-   //  ddd.setFullYear(cdd.getFullYear());
-   //  ddd.setMonth(cdd.getMonth());
-   //  ddd.setDate(cdd.getDay());
-   // // console.log(ddd);
-   //
-   //  const resD = cdd + ' ' + cdt;
-   //
-   //  //console.log(resD);
-   //
-   //  let options = {
-   //    year: 'numeric', month: 'numeric', day: 'numeric',
-   //    hour: 'numeric', minute: 'numeric', second: 'numeric',
-   //  };
-   //
-   //  //console.log(new Date(new Intl.DateTimeFormat('ru-RU', options).format(new Date())));
     const now = new Date();
     const date = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
 

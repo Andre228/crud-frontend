@@ -24,7 +24,7 @@ export class AuthService {
       const url = `/user/register`;
       return this.rest.post(url, body);
     } else {
-      return Promise.resolve(User);
+      return Promise.resolve(new User());
     }
   }
 
@@ -35,7 +35,20 @@ export class AuthService {
       localStorage.setItem('user', 'Basic ' + btoa(body.username + ':' + body.password));
       return this.rest.post(url, body);
     } else {
-      return Promise.resolve(User);
+      return Promise.resolve(new User());
+    }
+  }
+
+  async getUser(): Promise<User> {
+    const userInfo = localStorage.getItem('user');
+    const userStrInfo = userInfo.substr(6, userInfo.length - 1);
+    const username = atob(userStrInfo).split(':')[0];
+    const url = `/user/get/${username}`;
+    const user = await this.rest.get(url, true);
+    if (user) {
+      return user;
+    } else {
+      return Promise.reject('This user is not exists');
     }
   }
 

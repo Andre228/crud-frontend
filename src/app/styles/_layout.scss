@@ -10,6 +10,14 @@
   margin-top: 5%;
 }
 
+.m-b-25 {
+  margin-bottom: 25%;
+}
+
+.m-b-15 {
+  margin-bottom: 15%;
+}
+
 .m-l-90 {
   margin-left: 90%;
 }
@@ -22,6 +30,11 @@
   margin-left: 2%;
 }
 
+.justify-column {
+  display: flex;
+  flex-direction: column;
+}
+
 .justify-flex {
   display: flex;
   justify-content: space-between;
@@ -31,4 +44,8 @@
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+}
+
+.fit-c-btn {
+  width: fit-content;
 }

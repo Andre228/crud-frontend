@@ -64,9 +64,6 @@ export class AppGridComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.gridRows.length > 0) {
-     // this.isLoading = false;
-    }
   }
 
   private onClick(index: number): void {
@@ -83,7 +80,7 @@ export class AppGridComponent implements OnInit, OnChanges {
   }
 
   private isShow(cell) {
-    if (cell.key !== 'id' && cell.key !== 'control' && cell.key !== 'updatedAt' && cell.key !== 'deletedAt') {
+    if (cell.key !== 'id' && cell.key !== '1' && cell.key !== 'updatedAt' && cell.key !== 'deletedAt') {
       return cell.value;
     }
   }

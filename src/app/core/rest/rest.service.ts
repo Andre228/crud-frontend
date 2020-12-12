@@ -8,11 +8,15 @@ export class Rest {
 
   constructor(private http: HttpClient) {}
 
-  get(url: string, options?: boolean): Promise<any> {
+  get(url: string, options?: boolean, isBlob?: boolean): Promise<any> {
     url = `${APP_HOST}` + url;
     if (url) {
       if (options) {
-        return this.http.get(url, { headers: this.getAuthorizationHeaders() }).toPromise();
+        if (isBlob) {
+          return this.http.get(url, { headers: this.getAuthorizationHeaders(), responseType: 'blob' }).toPromise();
+        } else {
+          return this.http.get(url, { headers: this.getAuthorizationHeaders() }).toPromise();
+        }
       } else {
         return this.http.get(url).toPromise();
       }
@@ -21,11 +25,15 @@ export class Rest {
     }
   }
 
-  post(url: string, body: {}, options?: boolean): Promise<any> {
+  post(url: string, body: {}, options?: boolean, isMultipart?: boolean): Promise<any> {
     url = `${APP_HOST}` + url;
     if (url && body) {
       if (options) {
-        return this.http.post(url, body, { headers: this.getAuthorizationHeaders() }).toPromise();
+        if (isMultipart) {
+          return this.http.post(url, body, { headers: this.getAuthorizationHeadersMultipart() }).toPromise();
+        } else {
+          return this.http.post(url, body, { headers: this.getAuthorizationHeaders() }).toPromise();
+        }
       } else {
         return this.http.post(url, body).toPromise();
       }
@@ -35,11 +43,15 @@ export class Rest {
   }
 
 
-  put(url: string, body: {}, options?: boolean): Promise<any> {
+  put(url: string, body: {}, options?: boolean, isMultipart?: boolean): Promise<any> {
     url = `${APP_HOST}` + url;
     if (url && body) {
       if (options) {
-        return this.http.put(url, body, { headers: this.getAuthorizationHeaders() }).toPromise();
+        if (isMultipart) {
+          return this.http.put(url, body, { headers: this.getAuthorizationHeadersMultipart() }).toPromise();
+        } else {
+          return this.http.put(url, body, { headers: this.getAuthorizationHeaders() }).toPromise();
+        }
       } else {
         return this.http.put(url, body).toPromise();
       }
@@ -65,6 +77,17 @@ export class Rest {
     if (this.getAuthMetaData()) {
       const headers = new HttpHeaders({
         'Content-Type': 'application/json', 'Authorization': this.getAuthMetaData()
+      });
+      return headers;
+    } else {
+      return new HttpHeaders();
+    }
+  }
+
+  private getAuthorizationHeadersMultipart(): HttpHeaders {
+    if (this.getAuthMetaData()) {
+      const headers = new HttpHeaders({
+        'Authorization': this.getAuthMetaData()
       });
       return headers;
     } else {

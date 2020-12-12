@@ -9,7 +9,9 @@ import {Router} from "@angular/router";
       <h1 class="background-easy-green">
         Welcome to Home!
       </h1>
-        <a style="cursor: pointer;" class="nav-link" (click)="toCategories()">Категории</a>
+        <a style="cursor: pointer;" class="nav-link" (click)="toCategories()">Categories</a>
+        <a style="cursor: pointer;" class="nav-link" (click)="toPosts()">Posts</a>
+        <a style="cursor: pointer;" class="nav-link" (click)="toUsers()">Users</a>
     </div>
   `
 })
@@ -20,7 +22,15 @@ export class AppHomeComponent implements OnInit {
   ngOnInit() {
   }
 
-  toCategories() {
+  private toCategories(): void {
     this.router.navigate(['categories']);
+  }
+
+  private toPosts(): void {
+    this.router.navigate(['posts']);
+  }
+
+  private toUsers(): void {
+    this.router.navigate(['users']);
   }
 }

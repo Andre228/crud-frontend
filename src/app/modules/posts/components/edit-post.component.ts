@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewContainerRef} from '@angular/core';
 import {Category} from "../../../core/classes/category";
 import {Rest} from "../../../core/rest/rest.service";
 import {LoaderService} from "../../../shared/loader/services/loader.service";
@@ -7,10 +7,13 @@ import {Post} from "../../../core/classes/post";
 import {AuthService} from "../../login/services/auth.service";
 import {User} from "../../../core/classes/user";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {HttpClient, HttpHeaders, HttpParams, HttpRequest} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DomSanitizer} from "@angular/platform-browser";
-import {APP_HOST} from "../../../core/config";
+import {DialogRef} from "../../../shared/modal/services/dialog-ref";
+import {AppCreateEventComponent} from "../../events/components/create-event.component";
+import {ReplaySubject} from "rxjs";
+import {takeUntil} from "rxjs/internal/operators";
+import {DialogService} from "../../../shared/modal/services/dialog-service";
 
 @Component({
   selector: 'app-edit-post',
@@ -72,6 +75,8 @@ import {APP_HOST} from "../../../core/config";
           </div>
         </div>
         <button class="btn btn-outline-primary mt-2" (click)="loadComments($event)">Show Comments</button>
+        <button class="btn btn-outline-primary mt-2 ml-2" (click)="showEvents($event)">Show events</button>
+        <button class="btn btn-outline-primary mt-2 ml-2" (click)="addEvent($event)">Add event</button>
         <div class="mt-2" *ngIf="showComments">
           <app-comments
               [postId]="post.id"
@@ -81,7 +86,7 @@ import {APP_HOST} from "../../../core/config";
       </div>
   `
 })
-export class AppEditPostComponent implements OnInit {
+export class AppEditPostComponent implements OnInit, OnDestroy {
 
   private post = new Post();
   private formData: FormGroup;
@@ -98,15 +103,18 @@ export class AppEditPostComponent implements OnInit {
 
   private showComments: boolean = false;
 
+  private readonly destroyed$ = new ReplaySubject<void>(1);
+
   constructor(private rest: Rest,
               private auth: AuthService,
               private viewContainerRef: ViewContainerRef,
               private activateRoute: ActivatedRoute,
               private sanitizer: DomSanitizer,
               private router: Router,
-              private httpClient: HttpClient,
               private loader: LoaderService,
-              private notification: NotificationService) {
+              private notification: NotificationService,
+              private dialog: DialogService,
+              private dialogRef: DialogRef) {
 
     this.notification.containerRef = this.viewContainerRef;
 
@@ -134,9 +142,13 @@ export class AppEditPostComponent implements OnInit {
 
     this.setFormGroup();
     await this.image();
-    console.log(this.post);
 
     this.loader.removeLoader();
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next(null);
+    this.destroyed$.complete();
   }
 
   fileChange(event): void {
@@ -233,6 +245,19 @@ export class AppEditPostComponent implements OnInit {
 
   private loadComments(): void {
     this.showComments = !this.showComments;
+  }
+
+  private addEvent(event) {
+    const ref = this.dialog.open(AppCreateEventComponent, {
+      data: { post: this.post },
+    });
+    ref.afterClosed.pipe(takeUntil(this.destroyed$)).subscribe(result => {
+      console.log(result);
+    });
+  }
+
+  private showEvents(): void {
+    this.router.navigate([`events/${this.post.id}`]);
   }
 
 }

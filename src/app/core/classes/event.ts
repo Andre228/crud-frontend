@@ -1,7 +1,7 @@
 
 import {Post} from "./post";
 
-export class Event {
+export class MuseumEvent {
 
   id: number;
   description: string;
@@ -22,7 +22,7 @@ export class Event {
       this.updated_at = event.updated_at;
       this.post = event.post;
     } else {
-      return {} as Event;
+      return {} as MuseumEvent;
     }
   }
 }

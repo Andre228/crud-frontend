@@ -1,9 +1,14 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewContainerRef} from '@angular/core';
 import {DialogConfig} from "../../../shared/modal/services/dialog-config";
 import {DialogRef} from "../../../shared/modal/services/dialog-ref";
 import {Category} from "../../../core/classes/category";
 import {Rest} from "../../../core/rest/rest.service";
 import {LoaderService} from "../../../shared/loader/services/loader.service";
+import {Router} from "@angular/router";
+import {DialogService} from "../../../shared/modal/services/dialog-service";
+import {ReplaySubject} from "rxjs";
+import {AppCreateTourComponent} from "../../tours/components/create-tour.component";
+import {takeUntil} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-edit-category',
@@ -27,7 +32,7 @@ import {LoaderService} from "../../../shared/loader/services/loader.service";
               <h5 class="card-title">Slug</h5>
               <input type="text" class="form-control" [(ngModel)]="categoryInfo.slug">
             </div>
-            <div class="input-group mb-3">
+            <div class="input-group mt-3">
               <div class="input-group-prepend">
                 <label class="input-group-text" for="inputGroupSelect01">Parent category</label>
               </div>
@@ -35,25 +40,34 @@ import {LoaderService} from "../../../shared/loader/services/loader.service";
                 <option *ngFor="let category of listCategories" [ngValue]="category">{{ category.title }}</option>
               </select>
             </div>
-            <div class="justify-flex-reverse">
-              <button type="button" class="btn btn-primary m-t-1 m-l-2" (click)="updateCategory()">Save</button>
+            <hr>
+            <div class="justify-flex mt-2">
+              <button type="button" class="btn btn-primary" (click)="updateCategory()">Save</button>
+              <div>
+                <button type="button" class="btn btn-primary mr-2" (click)="showTours()">Show tours</button>
+                <button type="button" class="btn btn-primary" (click)="addTour()">Add tour</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
   `
 })
-export class AppEditCategoryComponent implements OnInit {
+export class AppEditCategoryComponent implements OnInit, OnDestroy {
 
   private categoryInfo: Category;
   private listCategories: Category [] = [];
   private selectedCategory: Category;
 
+  private readonly destroyed$ = new ReplaySubject<void>(1);
+
   constructor(private rest: Rest,
               private viewContainerRef: ViewContainerRef,
               private config: DialogConfig,
               private dialogRef: DialogRef,
-              private loader: LoaderService) {}
+              private loader: LoaderService,
+              private dialog: DialogService,
+              private router: Router) {}
 
   ngOnInit() {
     if (this.config && this.config.data && this.config.data.categoryInfo) {
@@ -63,8 +77,13 @@ export class AppEditCategoryComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.destroyed$.next(null);
+    this.destroyed$.complete();
+  }
+
   onClose(): void {
-    this.dialogRef.close(this.selectedCategory);
+    this.dialogRef.close();
   }
 
   private updateCategory(): void {
@@ -81,6 +100,20 @@ export class AppEditCategoryComponent implements OnInit {
       this.loader.removeLoader();
       this.dialogRef.close(res);
     });
+  }
+
+  private addTour(event) {
+    this.dialogRef.close();
+    const ref = this.dialog.open(AppCreateTourComponent, {
+      data: { category: this.categoryInfo },
+    });
+    ref.afterClosed.pipe(takeUntil(this.destroyed$)).subscribe(result => {
+      console.log(result);
+    });
+  }
+
+  private showTours(): void {
+    this.router.navigate([`tours/${this.categoryInfo.getId()}`]);
   }
 
 }

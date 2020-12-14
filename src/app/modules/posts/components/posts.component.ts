@@ -1,8 +1,6 @@
-import {Component, OnChanges, OnDestroy, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Rest} from "../../../core/rest/rest.service";
 import {DialogService} from "../../../shared/modal/services/dialog-service";
-import {takeUntil} from "rxjs/internal/operators";
-import {ReplaySubject} from "rxjs";
 import {LoaderService} from "../../../shared/loader/services/loader.service";
 import {Category} from "../../../core/classes/category";
 import {NotificationService} from "../../../shared/notification/services/notification.service";
@@ -34,7 +32,6 @@ import {Router} from "@angular/router";
 export class AppPostsComponent implements OnInit {
 
   private posts: Post [] = [];
-  private readonly destroyed$ = new ReplaySubject<void>(1);
   private postsRender = [];
 
   constructor(private rest: Rest,
@@ -48,7 +45,7 @@ export class AppPostsComponent implements OnInit {
 
   async ngOnInit() {
     this.loader.runLoader(this.viewContainerRef);
-    this.posts = await this.rest.get('/posts/all', true).then(res => res);
+    this.posts = await this.rest.get('/posts/all', true);
     this.posts = this.posts.map(post => new Post(post));
     if (this.posts) {
       this.setRenderPosts();

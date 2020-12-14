@@ -6,6 +6,7 @@ import {AppCategoriesComponent} from "./components/categories.component";
 import {SharedModule} from "../../shared/shared.module";
 import {AppEditCategoryComponent} from "./components/edit-category.component";
 import {AppCreateCategoryComponent} from "./components/create-category.component";
+import {AppCreateTourComponent} from "../tours/components/create-tour.component";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import {AppCreateCategoryComponent} from "./components/create-category.component
     HttpClientModule,
     SharedModule
   ],
-  entryComponents: [AppEditCategoryComponent, AppCreateCategoryComponent],
+  entryComponents: [AppEditCategoryComponent, AppCreateCategoryComponent, AppCreateTourComponent],
   providers: [],
   bootstrap: []
 })

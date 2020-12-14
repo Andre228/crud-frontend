@@ -68,12 +68,11 @@ export class AppCreateCategoryComponent implements OnInit {
 
     this.category.setCreatedAt(date);
     this.category.setUpdatedAt(date);
-    console.log(this.category);
 
     this.rest.post('/categories/create', this.category, true).then(res => {
       this.loader.removeLoader();
       this.dialogRef.close(res);
-      this.notification.showNotification({ message: 'Successfully created' });
+      this.notification.showNotification({ message: 'Successfully created', class: 'success-notify' });
       this.notification.closeNotification();
     });
   }

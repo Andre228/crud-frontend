@@ -12,6 +12,8 @@ import {Router} from "@angular/router";
         <a style="cursor: pointer;" class="nav-link" (click)="toCategories()">Categories</a>
         <a style="cursor: pointer;" class="nav-link" (click)="toPosts()">Posts</a>
         <a style="cursor: pointer;" class="nav-link" (click)="toUsers()">Users</a>
+        <a style="cursor: pointer;" class="nav-link" (click)="toEvents()">Events</a>
+        <a style="cursor: pointer;" class="nav-link" (click)="toTours()">Tours</a>
     </div>
   `
 })
@@ -32,5 +34,13 @@ export class AppHomeComponent implements OnInit {
 
   private toUsers(): void {
     this.router.navigate(['users']);
+  }
+
+  private toEvents(): void {
+    this.router.navigate(['events']);
+  }
+
+  private toTours(): void {
+    this.router.navigate(['tours']);
   }
 }

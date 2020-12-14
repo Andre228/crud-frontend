@@ -3,12 +3,12 @@
 app-notification {
 
   .notification-wrapper {
+    cursor: pointer;
     transition: .3s;
     position: fixed;
     bottom: 80px;
     right: 20px;
     padding: 5px 10px 5px 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     width: auto;
     height: auto;
   }
@@ -19,6 +19,10 @@ app-notification {
 
   .danger-notify {
     background-color: $colorBubbleDefaultRed;
+  }
+
+  .warning-notify {
+    background-color: $colorYellow;
   }
 
 }

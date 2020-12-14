@@ -8,6 +8,7 @@ import {LoaderService} from "../../../shared/loader/services/loader.service";
 import {AppCreateCategoryComponent} from "./create-category.component";
 import {Category} from "../../../core/classes/category";
 import {NotificationService} from "../../../shared/notification/services/notification.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-categories',
@@ -20,12 +21,15 @@ import {NotificationService} from "../../../shared/notification/services/notific
         <nav>
           <div class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <button type="button" class="btn btn-primary" (click)="openCreateCategory($event)">Add</button>
+            <button type="button" class="btn btn-outline-primary ml-2" (click)="goBack()">Back</button>
           </div>
         </nav>
-        <app-grid [tableHeaders]="getTableHeaders()"
-                  [gridRows]="categoriesRender"
-                  (clickEvent)="openEditCategory($event)"
-                  (deleteEvent)="deleteCategory($event)"></app-grid>
+        <span class="justify-center">
+          <app-grid [tableHeaders]="getTableHeaders()"
+                    [gridRows]="categoriesRender"
+                    (clickEvent)="openEditCategory($event)"
+                    (deleteEvent)="deleteCategory($event)"></app-grid>
+        </span>
       </div>
     </div>
   `
@@ -39,6 +43,7 @@ export class AppCategoriesComponent implements OnInit, OnDestroy, OnChanges {
   constructor(private rest: Rest,
               public dialog: DialogService,
               private viewContainerRef: ViewContainerRef,
+              private router: Router,
               private loader: LoaderService,
               private notification: NotificationService) {
     this.notification.containerRef = this.viewContainerRef;
@@ -50,7 +55,7 @@ export class AppCategoriesComponent implements OnInit, OnDestroy, OnChanges {
 
   async ngOnInit() {
     this.loader.runLoader(this.viewContainerRef);
-    this.categories = await this.rest.get('/categories/all', true).then(res => res);
+    this.categories = await this.rest.get('/categories/all', true);
     this.categories = this.categories.map(category => new Category(category));
     if (this.categories) {
       this.setRenderCategories();
@@ -59,7 +64,7 @@ export class AppCategoriesComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy() {
-    this.destroyed$.next();
+    this.destroyed$.next(null);
     this.destroyed$.complete();
   }
 
@@ -147,6 +152,10 @@ export class AppCategoriesComponent implements OnInit, OnDestroy, OnChanges {
         array.splice(index, 1);
       }
     });
+  }
+
+  private goBack(): void {
+    this.router.navigate(['']);
   }
 
 }

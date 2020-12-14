@@ -4,7 +4,7 @@ import {NotificationService} from "../services/notification.service";
 @Component({
   selector: 'app-notification',
   template: `
-    <div [class]="getClass()">
+    <div [class]="getClass()" (click)="close()">
       {{ data.message }}
     <div class="progress" style="height: 2px;">
       <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width' : getProgressWidth() }" aria-valuemin="0" aria-valuemax="100">
@@ -47,6 +47,10 @@ export class AppNotificationComponent implements OnInit, OnDestroy {
 
   private getClass(): string {
     return 'notification-wrapper ' + this.data.class;
+  }
+
+  private close(): void {
+    this.notificationService.closeNotificationImmediately();
   }
 
 }

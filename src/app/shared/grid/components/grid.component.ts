@@ -55,8 +55,6 @@ export class AppGridComponent implements OnInit, OnChanges {
   @Output() private clickEvent = new EventEmitter<any>();
   @Output() private deleteEvent = new EventEmitter<any>();
 
-  private isLoading: boolean = true;
-
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {

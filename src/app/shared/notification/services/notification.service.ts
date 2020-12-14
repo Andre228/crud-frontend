@@ -38,6 +38,12 @@ export class NotificationService {
     }, this.notificationLifeCycle);
   }
 
+  closeNotificationImmediately(): void {
+    if (this.viewContainerRef) {
+      this.viewContainerRef.detach(0);
+    }
+  }
+
   getNotificationLifeCycle(): number {
     return this.notificationLifeCycle;
   }

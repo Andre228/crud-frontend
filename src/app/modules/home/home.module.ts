@@ -6,6 +6,8 @@ import {AppHomeComponent} from "./components/home.component";
 import {CategoriesModule} from "../categories/categories.module";
 import {PostsModule} from "../posts/posts.module";
 import {UsersModule} from "../users/users.module";
+import {EventModule} from "../events/event.module";
+import {TourModule} from "../tours/tours.module";
 
 @NgModule({
   declarations: [
@@ -14,9 +16,11 @@ import {UsersModule} from "../users/users.module";
   imports: [
     BrowserModule,
     HttpClientModule,
+    TourModule,
     CategoriesModule,
+    EventModule,
     PostsModule,
-    UsersModule
+    UsersModule,
   ],
   providers: [],
   bootstrap: []

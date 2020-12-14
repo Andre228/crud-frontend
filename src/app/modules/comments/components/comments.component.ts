@@ -57,7 +57,7 @@ export class AppCommentsComponent implements OnInit {
   private startSelecting: boolean = false;
 
   constructor(private rest: Rest,
-              public dialog: DialogService,
+              private dialog: DialogService,
               private viewContainerRef: ViewContainerRef,
               private router: Router,
               private loader: LoaderService,
@@ -67,7 +67,7 @@ export class AppCommentsComponent implements OnInit {
 
   async ngOnInit() {
     this.loader.runLoader(this.viewContainerRef);
-    this.comments = await this.rest.get(`/comments/all/${this.post.id}`, true).then(res => res);
+    this.comments = await this.rest.get(`/comments/all/${this.post.id}`, true);
     this.setCommentsRender();
     this.loader.removeLoader();
   }
@@ -177,8 +177,6 @@ export class AppCommentsComponent implements OnInit {
 
   private async deleteSelected() {
 
-    console.log(this.commentsRender);
-
     let ids = this.commentsRender.reduce((results, item) => {
       if (item.isSelected) results.push({
         id: item.id,
@@ -191,8 +189,6 @@ export class AppCommentsComponent implements OnInit {
     }, []);
 
     let response = await this.rest.post(`/comments/delete/selected`, ids, true).then(res => res);
-
-    console.log(ids);
 
   }
 

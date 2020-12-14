@@ -9,6 +9,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {AppEditPostComponent} from "./components/edit-post.component";
 import {AppCommentsComponent} from "../comments/components/comments.component";
 import {CommentsModule} from "../comments/comments.module";
+import {AppCreateEventComponent} from "../events/components/create-event.component";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import {CommentsModule} from "../comments/comments.module";
     ReactiveFormsModule,
   ],
   entryComponents: [
-
+    AppCreateEventComponent
   ],
   providers: [HttpClient],
   bootstrap: []

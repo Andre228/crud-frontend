@@ -30,7 +30,7 @@ import {User} from "../../../core/classes/user";
          </div>
          <div class="comment-select-all">
            <h5 class="card-title">Select all</h5>
-           <input class="comment-select-all-checkbox" type="checkbox" (click)="selectAll()">
+           <input class="comment-select-all-checkbox" type="checkbox" (click)="selectAll()" [ngModel]="isSelectAll">
          </div>
       </div>
       <textarea type="text" class="form-control" [(ngModel)]="text"></textarea>
@@ -177,7 +177,9 @@ export class AppCommentsComponent implements OnInit {
 
   private async deleteSelected() {
 
-    let ids = this.commentsRender.reduce((results, item) => {
+    this.loader.runLoader(this.viewContainerRef);
+
+    const ids = this.commentsRender.reduce((results, item) => {
       if (item.isSelected) results.push({
         id: item.id,
         text: item.text,
@@ -188,7 +190,35 @@ export class AppCommentsComponent implements OnInit {
       return results;
     }, []);
 
-    let response = await this.rest.post(`/comments/delete/selected`, ids, true).then(res => res);
+    let notify = { message: '', class: '' };
+
+    const isDeleted = await this.rest.post(`/comments/delete/selected`, ids, true).then(response => {
+      if (response) {
+        notify = {
+          message: 'Successfully deleted',
+          class: 'success-notify'
+        };
+      } else {
+        Promise.reject('Unknown error');
+      }
+      return response;
+    })
+      .catch(err => {
+        notify = {
+          message: err.error,
+          class: 'danger-notify'
+        };
+      });
+
+    if (isDeleted) {
+      for (let i = 0; i < ids.length; i++) {
+        this.removeComment(ids[i].id);
+      }
+      this.setCommentsRender();
+      this.isSelectAll = false;
+      this.startSelecting = false;
+    }
+    this.afterRequest(notify);
 
   }
 

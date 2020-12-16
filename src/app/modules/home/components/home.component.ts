@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
       </h1>
         <a style="cursor: pointer;" class="nav-link" (click)="toCategories()">Categories</a>
         <a style="cursor: pointer;" class="nav-link" (click)="toPosts()">Posts</a>
-        <a style="cursor: pointer;" class="nav-link" (click)="toUsers()">Users</a>
+        <!--<a style="cursor: pointer;" class="nav-link" (click)="toUsers()">Users</a>-->
         <a style="cursor: pointer;" class="nav-link" (click)="toEvents()">Events</a>
         <a style="cursor: pointer;" class="nav-link" (click)="toTours()">Tours</a>
     </div>

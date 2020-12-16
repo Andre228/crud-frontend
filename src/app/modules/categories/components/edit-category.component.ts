@@ -113,6 +113,7 @@ export class AppEditCategoryComponent implements OnInit, OnDestroy {
   }
 
   private showTours(): void {
+    this.dialogRef.close();
     this.router.navigate([`tours/${this.categoryInfo.getId()}`]);
   }
 
